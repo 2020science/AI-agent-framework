@@ -1,0 +1,6 @@
+[
+  {"name":"AlphaGo (from paper)",      "Autonomy":3,"Efficacy":1,"Goal-complexity":2,"Generality":1},
+  {"name":"ChatGPT-3.5 (from paper)",  "Autonomy":2,"Efficacy":2,"Goal-complexity":3,"Generality":3},
+  {"name":"Claude-3.5 (from paper)",   "Autonomy":3,"Efficacy":3,"Goal-complexity":4,"Generality":3},
+  {"name":"Waymo (from paper)",        "Autonomy":4,"Efficacy":4,"Goal-complexity":4,"Generality":2}
+]

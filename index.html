@@ -1,0 +1,241 @@
+<!--
+Visualization based on:
+
+Characterizing AI Agents for Alignment and Governance
+Atoosa Kasirzadeh, Iason Gabriel
+April 30, 2025
+
+Arxiv: https://arxiv.org/abs/2504.21848 
+
+Created by Andrew Maynard
+"vibe coding" with ChatGPT May 1, 2025
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI-Agent Radar</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">  
+  
+
+  <!-- Chart.js + custom stretch scale -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.js"></script>
+  <script src="stretchScale.js"></script>
+</head>
+
+<body>
+  <header class="site-head">
+    <h1>AI-Agent Capability Radar</h1>
+    <p class="sub">Autonomy&nbsp;•&nbsp;Efficacy&nbsp;•&nbsp;Goal-complexity&nbsp;•&nbsp;Generality</p>
+  </header>
+  <p>Based on "Characterizing AI Agents for Alignment and Governance."<br>Atoosa Kasirzadeh, Iason Gabriel (April 30, 2025)<br>
+  <a href="https://arxiv.org/abs/2504.21848" target="_blank" rel="noopener noreferrer">
+    Link to full paper on arXiv
+  </a></p>
+
+  <!-- hero chart -->
+  <section class="chart-wrap">
+    <canvas id="radar"></canvas>
+  </section>
+
+  <!-- controls -->
+  <section class="controls">
+
+    <div class="c-item">
+      <label>Choose up to <strong>three</strong> agents<br>
+        <select id="agent-select" multiple size="5"></select>
+      </label>
+    </div>
+
+    <div class="c-item">
+      <label>Axis stretch<br>
+        <input type="range" id="stretch-slider" min="0" max="1" step="0.01" value="0">
+      </label>
+      <span id="stretch-readout">0&nbsp;% stretched</span>
+    </div>
+
+    <div class="c-item">
+      <button id="dl-btn">Download&nbsp;PNG</button>
+    </div>
+    
+    <div class="c-item">
+      <button id="reset-btn" type="button">Reset custom agents</button>
+    </div>
+
+
+  </section>
+  <!-- custom agent card -->
+  <section class="card">
+    <h2>Add a custom agent</h2>
+    <form id="custom-form" class="grid5">
+      <label>Name<br><input name="name" required placeholder="Your agent"></label>
+      <!-- four axis selectors -->
+      <label>Autonomy<br><select name="Autonomy">
+        <option value="0">0 – No autonomy</option><option value="1">1 – Restricted</option>
+        <option value="2">2 – Partial</option><option value="3">3 – Intermediate</option>
+        <option value="4">4 – High</option><option value="5">5 – Full</option>
+      </select></label>
+
+      <label>Causal impact<br>
+        <select name="CausalImpact">
+          <option value="Observation only">Observation only</option>
+          <option value="Minor impact">Minor impact</option>
+          <option value="Intermediate impact">Intermediate impact</option>
+          <option value="Comprehensive impact">Comprehensive impact</option>
+        </select>
+      </label>
+
+      <label>Environment<br>
+        <select name="Environment">
+          <option value="Simulated">Simulated environments</option>
+          <option value="Mediated">Mediated environments</option>
+          <option value="Physical">Physical environments</option>
+        </select>
+      </label>
+
+      <label>Goal-complexity<br><select name="Goal-complexity">
+        <option value="0">0 – No goal</option><option value="1">1 – Minimal</option>
+        <option value="2">2 – Low</option><option value="3">3 – Intermediate</option>
+        <option value="4">4 – High</option><option value="5">5 – Unbounded</option>
+      </select></label>
+
+      <label>Generality<br><select name="Generality">
+        <option value="0">0 – Null</option><option value="1">1 – Single speciality</option>
+        <option value="2">2 – Task-domain</option><option value="3">3 – Multi-domain</option>
+        <option value="4">4 – Majority domains</option><option value="5">5 – Fully general</option>
+      </select></label>
+
+      <button>Add &amp; plot</button>
+    </form>
+  </section>
+
+  <!-- explainer -->
+  <section class="card explainer">
+    <h2>About</h2>
+    <p>In their paper <em>Characterizing AI Agents for Alignment and Governance,</em> Atoosa Kasirzadeh 
+    and Iason Gabriel introduce a framework for evaluating AI agents based on four key dimensions: autonomy, 
+    efficacy, goal complexity, and generality. Each dimension features gradations that capture different 
+    levels of capability and the corresponding governance needs.</p> <p>Using this framework, the authors 
+    create "agentic profiles" for several real-world AI systems—including AlphaGo, ChatGPT-3.5, Claude 3.5 
+    Sonnet with tools, and Waymo—to illustrate varying degrees of autonomy and impact on their environments. 
+    They highlight that clearly understanding these dimensions is crucial for addressing governance challenges 
+    such as risk assessment, monitoring, alignment verification, and economic consequences. Ultimately, the paper 
+    emphasizes that detailed characterizations of AI agents are essential to develop effective oversight mechanisms 
+    aligned with societal objectives.</p> 
+    <p>This website allows users to explore Kasirzadeh and Gabriel’s approach to understanding and 
+    visualizing AI agency. A new interactive feature—the ability to "stretch" the radar plot—has been 
+    added to illustrate the potentially non-linear relationships between the different levels within each dimension.</p>
+
+
+    <h3>Autonomy (A)</h3>
+    <p><b>Levels of autonomy for AI agents.</b> <br>From Table 2 in Kasirzadeh & Gabriel</p>
+    <ul>
+      <li><b>A.0: No autonomy</b> The AI system is <i>entirely dependent</i> upon the principal for its ability to act and can only act in the manner the principal dictates.</li>
+      <li><b>A.1: Restricted autonomy</b> The AI system can conduct a single automated task. The other tasks always take place under the principal’s <i>direct oversight</i>.</li>
+      <li><b>A.2: Partial autonomy</b> The AI system can conduct a range of automated tasks. The principal must remain engaged and be ready to take control at any time.</li>
+      <li><b>A.3: Intermediate autonomy</b> The AI system can perform the majority of tasks independently, though it still relies upon <i>input</i> from the principal for critical determinations.</li>
+      <li><b>A.4: High autonomy</b> The AI system can independently perform all tasks <i>in certain circumstances</i>, though oversight is maintained by the principal when those circumstances are not met (in the event of aberrant behaviour).</li>
+      <li><b>A.5: Full autonomy</b> The AI system is able to perform all tasks <i>without oversight or control</i>.</li>
+    </ul>
+    
+    <h3>Efficacy (E)</h3> 
+    
+    <p><b>Levels of efficacy for AI agents.</b> <br>From Tables 3 - 5 in Kasirzadeh & Gabriel</p>
+    <p>Note that efficacy is a combination of levels of causal impact and type of environment (see table below):</p>
+    <h4>Levels of causal impact</h4>
+    <ul>
+      <li><b>Observation only</b> An AI agent can only observe its environment without possessing the ability to causally impact the environment or make any modification to it.</li>
+      <li><b>Minor impact</b> An AI agent has a minor impact on its environment as it has a limited suite of actions, or its suite of actions only have a limited impact on the environment. These effects are typically localized, temporary, and limited in scope, affecting only specific parameters within tightly constrained domains and generally representing minimal deviation from the environment’s baseline state.</li>
+      <li><b>Intermediate impact</b> An AI agent can create substantial and enduring change in its environment when it has an extensive suite of actions, or its actions are more impactful. An agent achieves intermediate impact when its actions produce noticeable and persistent changes across multiple parameters or systems, sometimes creating new equilibrium states that would not naturally come about.</li>
+      <li><b>Comprehensive impact</b> An AI agent can significantly reshape its environment across multiple dimensions, approaching full environmental control.</li>
+    </ul>
+    <h4>Types of environment</h4>
+    <ul>
+      <li><b>Simulated environments</b> An AI agent can only observe its environment without possessing the ability to causally impact the environment or make any modification to it.</li>
+      <li><b>Mediated environments</b> An AI agent has a minor impact on its environment as it has a limited suite of actions, or its suite of actions only have a limited impact on the environment. These effects are typically localized, temporary, and limited in scope, affecting only specific parameters within tightly constrained domains and generally representing minimal deviation from the environment’s baseline state.</li>
+      <li><b>Physical environments</b> An AI agent can significantly reshape its environment across multiple dimensions, approaching full environmental control.</li>
+    </ul>
+
+
+    <div class="table-responsive">
+    <table class="efficacy-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Simulated</th>
+          <th>Mediated</th>
+          <th>Physical</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Observation only</th>
+          <td>E.0</td>
+          <td>E.0</td>
+          <td>E.0</td>
+        </tr>
+        <tr>
+          <th>Minor impact</th>
+          <td>E.1</td>
+          <td>E.2</td>
+          <td>E.3</td>
+        </tr>
+        <tr>
+          <th>Intermediate impact</th>
+          <td>E.2</td>
+          <td>E.3</td>
+          <td>E.4</td>
+        </tr>
+        <tr>
+          <th>Comprehensive impact</th>
+          <td>E.3</td>
+          <td>E.4</td>
+          <td>E.5</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    
+    <h3>Goal-complexity (GC)</h3>
+
+    <p><b>Levels of goal complexity for AI agents.</b> <br>From Table 6 in Kasirzadeh & Gabriel. See paper for explanatory footnotes.</p>
+    <ul>
+      <li><b>GC.0: No goal </b> An entity that does not pursue a goal is not an agent. The absence of goals is a baseline state.</li>
+      <li><b>GC.1: Minimal goal complexity</b> The agent is able to pursue a single unified goal in a fairly direct manner.</i>.</li>
+      <li><b>GC.2: Low goal complexity</b> The agent is able to pursue a single unified goal, but this involves a more complex sequence of action.</li>
+      <li><b>GC.3. Intermediate goal complexity</b> The agent is able to break down a complex goal into subgoals and pursue them in a fairly direct manner.</li>
+      <li><b>GC.4: High goal complexity</b> The agent is able to break down a complex goal into many different subgoals, where success depends upon balancing and sequencing subgoals, which may themselves be challenging to fulfil.</li>
+      <li><b>GC.5: Unbounded goal complexity</b> The agent can achieve all of the preceding steps. It can also generate its own goal structures in an unbounded way and interpret underspecified objectives.</li>
+    </ul>
+    
+    
+    <h3>Generality (G)</h3>
+
+    <p><b>Levels of generality for AI agents.</b> <br>From Table 7 in Kasirzadeh & Gabriel</p>
+    <ul>
+      <li><b>G.0: Null value </b> There is no application or no ability to perform a task in any domain.</li>
+      <li><b>G.1: Single speciality</b> The agent can master one specific task, such as a single game, but cannot transfer its capabilities to even closely related domains.</li>
+      <li><b>G.2: Task domain mastery</b> The agent demonstrates mastery across a closely related set of tasks, such as playing board games, that share a common structure and type of objective.</li>
+      <li><b>G.3: Multiple task domain mastery</b> The agent can operate successfully across different task domains involving different cognitive capabilities, for example, those that involve linguistic, logical, and creative elements.</li>
+      <li><b>G.4: Majority task domain mastery</b> The agent can successfully operate across the majority of human cognitive task domains.</li>
+      <li><b>G.5: Fully general AI system</b> The agent can fulfil the entire suite of human cognitive tasks across all domains.</li>
+    </ul>
+    
+    
+  </section>
+
+  <script type="module" src="main.js"></script>
+</body>
+<footer class="site-footer">
+  <p>
+    Andrew Maynard, May 2025
+  </p>
+</footer>
+
+</html>

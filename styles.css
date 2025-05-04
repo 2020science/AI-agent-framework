@@ -1,0 +1,202 @@
+/*
+ * styles.css
+ * Styles for AI-Agent Capability Radar
+ */
+
+/* ---------- CSS Variables & Base ---------- */
+:root {
+  --plot: 600px;    /* max width for radar chart container */
+  --page: 1200px;   /* max width for page content */
+  font: 16px/1.45 system-ui, sans-serif;
+}
+
+/* ---------- Global Layout ---------- */
+body {
+  margin: 0;
+  padding: 0 1rem 3rem;           /* page padding: 1rem sides, 3rem bottom */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;                      /* vertical spacing between sections */
+  text-align: center;
+}
+
+/* ---------- Header ---------- */
+.site-head {
+  max-width: var(--page);         /* constrain header width */
+}
+.site-head h1 {
+  margin: 1rem 0 0;
+  font-size: 1.9rem;
+}
+.site-head .sub {
+  margin: 0.25rem 0 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+/* ---------- Radar Chart ---------- */
+.chart-wrap {
+  width: 100%;
+  max-width: var(--plot);         /* constrain chart width */
+}
+.chart-wrap canvas {
+  display: block;                 /* ensure canvas fills its container */
+  width: 100%;
+  aspect-ratio: 1 / 1;            /* maintain square shape */
+}
+
+/* ---------- Controls ---------- */
+.controls {
+  width: 100%;
+  max-width: var(--page);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem 2rem;
+  justify-items: center;
+  align-items: center;
+}
+.c-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.controls select {
+  min-width: 180px;
+  height: 5rem;                   /* fixed height for visibility */
+}
+.controls input[type="range"] {
+  width: 220px;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  margin: 1.25rem auto 2rem;      /* center and spacing */
+  width: calc(100% - 2.5rem);     /* full width minus page padding */
+  max-width: var(--page);         /* constrain to page width */
+  padding: 1rem 1.5rem;           /* inner padding */
+  box-sizing: border-box;         /* include padding in width */
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px #e0e0e0,            /* hairline border */
+    0 2px 6px rgba(0,0,0,0.04);   /* subtle shadow */
+  text-align: left;
+}
+
+/* Grid layout for custom-agent form */
+.grid5 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  align-items: end;               /* align inputs at bottom */
+}
+.grid5 select,
+.grid5 input {
+  width: 100%;
+  padding: 0.25rem;
+}
+
+/* ---------- Buttons & Misc ---------- */
+button {
+  padding: 0.4rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.explainer h3 {
+  margin: 0.6rem 0 0.2rem;
+}
+
+/* ---------- Accessibility Focus ---------- */
+select:focus,
+button:focus,
+input[type="range"]:focus {
+  outline: 3px solid #0072B2;
+  outline-offset: 2px;
+}
+
+/* ---------- Slider Styling ---------- */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 220px;
+  height: 6px;
+  border-radius: 3px;
+  background: #ccc;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0072B2;
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0072B2;
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+
+/* ---------- Dark Mode ---------- */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #111;
+    color: #e0e0e0;
+  }
+  .card {
+    background: #1e1e1e;
+    border-color: #333;
+  }
+  input[type="range"] {
+    background: #444;
+  }
+}
+
+/* ---------- Responsive Spacing ---------- */
+@media (max-width: 640px) {
+  .card {
+    margin: 1rem 1rem 2rem;      /* larger side margins on mobile */
+  }
+}
+
+/* ---------- Efficacy Table ---------- */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+.efficacy-table {
+  width: 80%;
+  margin: 1rem 0;
+  border-collapse: separate;       /* enable border-spacing */
+  border-spacing: 2rem 1rem;      /* 2rem between columns, 1rem between rows */
+}
+.efficacy-table th,
+.efficacy-table td {
+  border: none;
+  padding: 0.1rem;                 /* inner cell padding */
+  text-align: left;
+}
+
+/* ---------- Explainer Card Padding ---------- */
+.card.explainer {
+  padding-right: 10rem;            /* extra breathing room on wide screens */
+}
+@media (max-width: 768px) {
+  .card.explainer {
+    padding-right: 1rem;           /* reduced padding on narrow screens */
+  }
+  .efficacy-table {
+    border-spacing: 1rem 0.5rem;   /* smaller gaps on mobile */
+  }
+  .efficacy-table th,
+  .efficacy-table td {
+    padding: 0.25rem;              /* reduce inner padding */
+  }
+}
