@@ -1,5 +1,6 @@
 # AI-agent-framework
-A simple we-based app to visualize AI agents with respect to Autonomy • Efficacy • Goal-complexity • Generality. Based on work of Atoosa Kasirzadeh and Iason Gabriel
+A simple web-based app to visualize AI agents with respect to Autonomy • Efficacy • Goal-complexity • Generality. 
+Based on work of Atoosa Kasirzadeh and Iason Gabriel
 
 # Original paper
 Atoosa Kasirzadeh and Iason Gabriel (2025). Characterizing AI Agents for Alignment and Governance. http://arxiv.org/abs/2504.21848
